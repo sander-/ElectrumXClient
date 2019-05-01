@@ -4,6 +4,7 @@
 
 #secrets
 *.secret
+*-secrets*.json
 
 # User-specific files
 *.suo
