@@ -1,6 +1,7 @@
 ﻿using ElectrumXClient;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace ElectrumXClient.Tests
 {
@@ -22,9 +23,9 @@ namespace ElectrumXClient.Tests
         }
 
         [Test]
-        public void Test_CanGetVersion()
+        public async Task Test_CanGetVersion()
         {
-            var response = _client.GetVersion();
+            var response = await _client.GetVersion();
             _client.Dispose();
         }
     }

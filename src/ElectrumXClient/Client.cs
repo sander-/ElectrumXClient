@@ -5,6 +5,7 @@ using System.IO;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 
 namespace ElectrumXClient
 {
@@ -17,6 +18,7 @@ namespace ElectrumXClient
         SslStream _sslStream;
         NetworkStream _tcpStream;
         Stream _stream;
+        readonly int BUFFERSIZE = 32;
 
         public Client(string host, int port, bool useSSL)
         {
@@ -25,14 +27,15 @@ namespace ElectrumXClient
             _useSSL = useSSL;
         }
 
-        private void Connect()
+        private async Task Connect()
         {
-            _tcpClient = new TcpClient(_host, _port);
+            _tcpClient = new TcpClient();
+            await _tcpClient.ConnectAsync(_host, _port);
             if (_useSSL)
             {
                 _sslStream = new SslStream(_tcpClient.GetStream(), true,
                     new RemoteCertificateValidationCallback(CertificateValidationCallback));
-                _sslStream.AuthenticateAsClient(_host);
+                await _sslStream.AuthenticateAsClientAsync(_host);
                 _stream = _sslStream;
             }
             else
@@ -48,23 +51,33 @@ namespace ElectrumXClient
             _tcpClient.Close();
         }
 
-        public VersionResponse GetVersion()
+        public async Task<VersionResponse> GetVersion()
         {
             var request = new VersionRequest();
             var requestData = request.GetRequestData<VersionRequest>();
-            this.Connect();
-            string response = SendMessage(requestData);
+            await this.Connect();
+            string response = await SendMessage(requestData);
             this.Disconnect();
             return new VersionResponse(response);
         }
 
-        private string SendMessage(byte[] requestData)
+        private async Task<string> SendMessage(byte[] requestData)
         {
-            _stream.Write(requestData, 0, requestData.Length);
-            var responseData = new byte[256];
-            string response = string.Empty;
-            int bytes = _stream.Read(responseData, 0, responseData.Length);
-            response = System.Text.Encoding.ASCII.GetString(responseData, 0, bytes);
+            var response = string.Empty;
+            var buffer = new byte[BUFFERSIZE];
+            await _stream.WriteAsync(requestData, 0, requestData.Length);
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                int read;
+                while ((read = await _stream.ReadAsync(buffer, 0, buffer.Length)) > 0)
+                {
+                    ms.Write(buffer, 0, read);
+                    if (read < BUFFERSIZE) break;
+                }
+                response = System.Text.Encoding.ASCII.GetString(ms.ToArray());
+            }
+
             return response;
         }
 
