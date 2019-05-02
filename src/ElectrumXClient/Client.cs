@@ -47,6 +47,57 @@ namespace ElectrumXClient
             return ServerPeersSubscribeResponse.FromJson(response);
         }
 
+        public async Task<BlockchainNumblocksSubscribeResponse> GetBlockchainNumblocksSubscribe()
+        {
+            var request = new BlockchainNumblocksSubscribeRequest();
+            var requestData = request.GetRequestData<BlockchainNumblocksSubscribeRequest>();
+            await this.Connect();
+            string response = await SendMessage(requestData);
+            this.Disconnect();
+            return BlockchainNumblocksSubscribeResponse.FromJson(response);
+        }
+
+        public async Task<BlockchainBlockHeaderResponse> GetBlockchainBlockHeader()
+        {
+            var request = new BlockchainBlockHeaderRequest();
+            var requestData = request.GetRequestData<BlockchainBlockHeaderRequest>();
+            await this.Connect();
+            string response = await SendMessage(requestData);
+            this.Disconnect();
+            return BlockchainBlockHeaderResponse.FromJson(response);
+        }
+
+        public async Task<BlockchainScripthashGetBalanceResponse> GetBlockchainScripthashGetBalance(string scripthash)
+        {
+            var request = new BlockchainScripthashGetBalanceRequest();
+            request.Parameters = new string[] { scripthash };
+            var requestData = request.GetRequestData<BlockchainScripthashGetBalanceRequest>();
+            await this.Connect();
+            string response = await SendMessage(requestData);
+            this.Disconnect();
+            return BlockchainScripthashGetBalanceResponse.FromJson(response);
+        }
+
+        public async Task<BlockchainTransactionGetResponse> GetBlockchainTransactionGet(string txhash)
+        {
+            var request = new BlockchainTransactionGetRequest();
+            request.Parameters = new object[] { txhash, true };
+            var requestData = request.GetRequestData<BlockchainTransactionGetRequest>();
+            await this.Connect();
+            string response = await SendMessage(requestData);
+            this.Disconnect();
+            return BlockchainTransactionGetResponse.FromJson(response);
+        }
+
+        public async Task<ServerFeaturesResponse> GetServerFeatures()
+        {
+            var request = new ServerFeaturesRequest();            
+            var requestData = request.GetRequestData<ServerFeaturesRequest>();
+            await this.Connect();
+            string response = await SendMessage(requestData);
+            this.Disconnect();
+            return ServerFeaturesResponse.FromJson(response);
+        }
 
         private async Task Connect()
         {

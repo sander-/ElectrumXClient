@@ -17,7 +17,7 @@ namespace ElectrumXClient.Request
         public string Method { get; set; }
 
         [JsonProperty("params")]
-        public string[] Parameters { get; set; }
+        public object Parameters { get; set; }
 
         public byte[] GetRequestData<T>()
         {

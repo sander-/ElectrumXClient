@@ -25,6 +25,8 @@ namespace ElectrumXClient.Response
                 case JsonToken.StartArray:
                     var arrayValue = serializer.Deserialize<List<string>>(reader);
                     return new ResponseResult { ValueArray = arrayValue };
+                case JsonToken.StartObject:
+                    return "";
             }
             throw new Exception("Cannot unmarshal response");
         }
