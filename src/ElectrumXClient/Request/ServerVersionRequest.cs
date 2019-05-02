@@ -4,9 +4,9 @@ using System.Text;
 
 namespace ElectrumXClient.Request
 {
-    public class VersionRequest : RequestBase
+    public class ServerVersionRequest : RequestBase
     {
-        public VersionRequest() : base()
+        public ServerVersionRequest() : base()
         {
             base.Method = "server.version";
             base.Parameters = new string[0];

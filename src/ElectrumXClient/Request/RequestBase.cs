@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
@@ -7,30 +8,26 @@ using System.Text;
 
 namespace ElectrumXClient.Request
 {
-    [DataContract]
     public class RequestBase
     {
-        [DataMember(Name = "id")]
+        [JsonProperty("id")]
         public int MessageId { get; set; }
-        [DataMember(Name = "method")]
+
+        [JsonProperty("method")]
         public string Method { get; set; }
-        [DataMember(Name = "params")]
+
+        [JsonProperty("params")]
         public string[] Parameters { get; set; }
 
         public byte[] GetRequestData<T>()
         {
-            byte[] data = System.Text.Encoding.ASCII.GetBytes(Serialize<T>());
+            byte[] data = System.Text.Encoding.ASCII.GetBytes(ToJson<T>());
             return data;
         }
 
-        protected string Serialize<T>()
+        protected string ToJson<T>()
         {
-            using (var ms = new MemoryStream())
-            {
-                var serializer = new DataContractJsonSerializer(typeof(T));
-                serializer.WriteObject(ms, this);
-                return Encoding.ASCII.GetString(ms.ToArray()) + "\n";
-            }
+            return JsonConvert.SerializeObject(this, Converter<T>.Settings) + "\n";
         }
     }
 }

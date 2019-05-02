@@ -27,6 +27,27 @@ namespace ElectrumXClient
             _useSSL = useSSL;
         }
 
+        public async Task<ServerVersionResponse> GetServerVersion()
+        {
+            var request = new ServerVersionRequest();
+            var requestData = request.GetRequestData<ServerVersionRequest>();
+            await this.Connect();
+            string response = await SendMessage(requestData);
+            this.Disconnect();
+            return ServerVersionResponse.FromJson(response);
+        }
+
+        public async Task<ServerPeersSubscribeResponse> GetServerPeersSubscribe()
+        {
+            var request = new ServerPeersSubscribeRequest();
+            var requestData = request.GetRequestData<ServerPeersSubscribeRequest>();
+            await this.Connect();
+            string response = await SendMessage(requestData);
+            this.Disconnect();
+            return ServerPeersSubscribeResponse.FromJson(response);
+        }
+
+
         private async Task Connect()
         {
             _tcpClient = new TcpClient();
@@ -49,16 +70,6 @@ namespace ElectrumXClient
         {
             _stream.Close();
             _tcpClient.Close();
-        }
-
-        public async Task<VersionResponse> GetVersion()
-        {
-            var request = new VersionRequest();
-            var requestData = request.GetRequestData<VersionRequest>();
-            await this.Connect();
-            string response = await SendMessage(requestData);
-            this.Disconnect();
-            return new VersionResponse(response);
         }
 
         private async Task<string> SendMessage(byte[] requestData)
