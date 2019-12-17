@@ -77,6 +77,29 @@ namespace ElectrumXClient.Tests
             var response = await _client.GetBlockchainTransactionGet("901d8af29d41cd7a5e01f0f5d5423d435ff88c180fb6f2f9e4a90fdb6da62e54");
             Assert.IsInstanceOf<BlockchainTransactionGetResponse>(response);
         }
+        
+        [Test]
+        public async Task Test_CanGetScripthashGetHistory()
+        {
+            var response = await _client.GetBlockchainScripthashGetHistory("8b01df4e368ea28f8dc0423bcf7a4923e3a12d307c875e47a0cfbf90b5c39161");
+            Assert.IsInstanceOf<BlockchainScripthashGetHistoryResponse>(response);
+            Assert.Greater(response.Result.Count, 0);
+        }
+
+        [Test]
+        public async Task Test_CanGetScripthashListunspent()
+        {
+            var response = await _client.GetBlockchainListunspent("8b01df4e368ea28f8dc0423bcf7a4923e3a12d307c875e47a0cfbf90b5c39161");
+            Assert.IsInstanceOf<BlockchainScripthashListunspentResponse>(response);
+            Assert.Greater(response.Result.Count, 0);
+        }
+
+        [Test]
+        public async Task Test_CanGetBlockchainEstimatefee()
+        {
+            var response = await _client.GetBlockchainEstimatefee(1);
+            Assert.IsInstanceOf<BlockchainEstimatefeeResponse>(response);
+        }
 
     }
 }
