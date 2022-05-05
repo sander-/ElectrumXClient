@@ -21,7 +21,7 @@ namespace ElectrumXClient.Request
 
         public byte[] GetRequestData<T>()
         {
-            byte[] data = System.Text.Encoding.ASCII.GetBytes(ToJson<T>());
+            var data = Encoding.ASCII.GetBytes(ToJson<T>());
             return data;
         }
 

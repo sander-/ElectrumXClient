@@ -8,8 +8,8 @@ namespace ElectrumXClient.Request
     {
         public BlockchainNumblocksSubscribeRequest() : base()
         {
-            base.Method = "blockchain.numblocks.subscribe";
-            base.Parameters = new string[0];
+            Method = "blockchain.numblocks.subscribe";
+            Parameters = new string[0];
         }
     }
 }

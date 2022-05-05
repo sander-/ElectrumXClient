@@ -8,8 +8,8 @@ namespace ElectrumXClient.Request
     {
         public BlockchainScripthashGetHistoryRequest() : base()
         {
-            base.Method = "blockchain.scripthash.get_history";
-            base.Parameters = null;
+            Method = "blockchain.scripthash.get_history";
+            Parameters = null;
         }
     }
 }

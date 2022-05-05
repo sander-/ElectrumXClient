@@ -8,8 +8,8 @@ namespace ElectrumXClient.Request
     {
         public ServerPeersSubscribeRequest() : base()
         {
-            base.Method = "server.peers.subscribe";
-            base.Parameters = new string[0];
+            Method = "server.peers.subscribe";
+            Parameters = new string[0];
         }
     }
 }

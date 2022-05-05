@@ -8,8 +8,8 @@ namespace ElectrumXClient.Request
     {
         public BlockchainEstimatefeeRequest() : base()
         {
-            base.Method = "blockchain.estimatefee";
-            base.Parameters = null;
+            Method = "blockchain.estimatefee";
+            Parameters = null;
         }
     }
 }

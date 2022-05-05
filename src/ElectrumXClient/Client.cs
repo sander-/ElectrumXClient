@@ -5,6 +5,7 @@ using System.IO;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ElectrumXClient
@@ -18,7 +19,7 @@ namespace ElectrumXClient
         SslStream _sslStream;
         NetworkStream _tcpStream;
         Stream _stream;
-        readonly int BUFFERSIZE = 32;
+       // readonly int BUFFERSIZE = 2048;
 
         public Client(string host, int port, bool useSSL)
         {
@@ -32,7 +33,7 @@ namespace ElectrumXClient
             var request = new ServerVersionRequest();
             var requestData = request.GetRequestData<ServerVersionRequest>();
             await this.Connect();
-            string response = await SendMessage(requestData);
+            var response = await SendMessage(requestData);
             this.Disconnect();
             return ServerVersionResponse.FromJson(response);
         }
@@ -42,7 +43,7 @@ namespace ElectrumXClient
             var request = new ServerPeersSubscribeRequest();
             var requestData = request.GetRequestData<ServerPeersSubscribeRequest>();
             await this.Connect();
-            string response = await SendMessage(requestData);
+            var response = await SendMessage(requestData);
             this.Disconnect();
             return ServerPeersSubscribeResponse.FromJson(response);
         }
@@ -52,7 +53,7 @@ namespace ElectrumXClient
             var request = new BlockchainNumblocksSubscribeRequest();
             var requestData = request.GetRequestData<BlockchainNumblocksSubscribeRequest>();
             await this.Connect();
-            string response = await SendMessage(requestData);
+            var response = await SendMessage(requestData);
             this.Disconnect();
             return BlockchainNumblocksSubscribeResponse.FromJson(response);
         }
@@ -62,83 +63,95 @@ namespace ElectrumXClient
             var request = new BlockchainBlockHeaderRequest();
             var requestData = request.GetRequestData<BlockchainBlockHeaderRequest>();
             await this.Connect();
-            string response = await SendMessage(requestData);
+            var response = await SendMessage(requestData);
             this.Disconnect();
             return BlockchainBlockHeaderResponse.FromJson(response);
         }
 
         public async Task<BlockchainEstimatefeeResponse> GetBlockchainEstimatefee(uint number)
         {
-            var request = new BlockchainEstimatefeeRequest();
-            request.Parameters = new uint[] { number };
+            var request = new BlockchainEstimatefeeRequest
+            {
+                Parameters = new uint[] { number }
+            };
             var requestData = request.GetRequestData<BlockchainEstimatefeeRequest>();
             await this.Connect();
-            string response = await SendMessage(requestData);
+            var response = await SendMessage(requestData);
             this.Disconnect();
             return BlockchainEstimatefeeResponse.FromJson(response);
         }
 
         public async Task<BlockchainScripthashGetBalanceResponse> GetBlockchainScripthashGetBalance(string scripthash)
         {
-            var request = new BlockchainScripthashGetBalanceRequest();
-            request.Parameters = new string[] { scripthash };
+            var request = new BlockchainScripthashGetBalanceRequest
+            {
+                Parameters = new string[] { scripthash }
+            };
             var requestData = request.GetRequestData<BlockchainScripthashGetBalanceRequest>();
             await this.Connect();
-            string response = await SendMessage(requestData);
+            var response = await SendMessage(requestData);
             this.Disconnect();
             return BlockchainScripthashGetBalanceResponse.FromJson(response);
         }
 
         public async Task<BlockchainScripthashGetHistoryResponse> GetBlockchainScripthashGetHistory(string scripthash)
         {
-            var request = new BlockchainScripthashGetHistoryRequest();
-            request.Parameters = new string[] { scripthash };
+            var request = new BlockchainScripthashGetHistoryRequest
+            {
+                Parameters = new string[] { scripthash }
+            };
             var requestData = request.GetRequestData<BlockchainScripthashGetHistoryRequest>();
             await this.Connect();
-            string response = await SendMessage(requestData);
+            var response = await SendMessage(requestData);
             this.Disconnect();
             return BlockchainScripthashGetHistoryResponse.FromJson(response);
         }
 
         public async Task<BlockchainScripthashListunspentResponse> GetBlockchainListunspent(string scripthash)
         {
-            var request = new BlockchainScripthashListunspentRequest();
-            request.Parameters = new string[] { scripthash };
+            var request = new BlockchainScripthashListunspentRequest
+            {
+                Parameters = new string[] { scripthash }
+            };
             var requestData = request.GetRequestData<BlockchainScripthashListunspentRequest>();
             await this.Connect();
-            string response = await SendMessage(requestData);
+            var response = await SendMessage(requestData);
             this.Disconnect();
             return BlockchainScripthashListunspentResponse.FromJson(response);
         }
 
         public async Task<BlockchainTransactionGetResponse> GetBlockchainTransactionGet(string txhash)
         {
-            var request = new BlockchainTransactionGetRequest();
-            request.Parameters = new object[] { txhash, true };
+            var request = new BlockchainTransactionGetRequest
+            {
+                Parameters = new object[] { txhash, true }
+            };
             var requestData = request.GetRequestData<BlockchainTransactionGetRequest>();
             await this.Connect();
-            string response = await SendMessage(requestData);
+            var response = await SendMessage(requestData);
             this.Disconnect();
             return BlockchainTransactionGetResponse.FromJson(response);
         }
 
         public async Task<BlockchainTransactionBroadcastResponse> BlockchainTransactionBroadcast(string tx)
         {
-            var request = new BlockchainTransactionBroadcastRequest();
-            request.Parameters = new object[] { tx };
+            var request = new BlockchainTransactionBroadcastRequest
+            {
+                Parameters = new object[] { tx }
+            };
             var requestData = request.GetRequestData<BlockchainTransactionBroadcastRequest>();
             await this.Connect();
-            string response = await SendMessage(requestData);
+            var response = await SendMessage(requestData);
             this.Disconnect();
             return BlockchainTransactionBroadcastResponse.FromJson(response);
         }
 
         public async Task<ServerFeaturesResponse> GetServerFeatures()
         {
-            var request = new ServerFeaturesRequest();            
+            var request = new ServerFeaturesRequest();
             var requestData = request.GetRequestData<ServerFeaturesRequest>();
             await this.Connect();
-            string response = await SendMessage(requestData);
+            var response = await SendMessage(requestData);
             this.Disconnect();
             return ServerFeaturesResponse.FromJson(response);
         }
@@ -169,22 +182,36 @@ namespace ElectrumXClient
 
         private async Task<string> SendMessage(byte[] requestData)
         {
-            var response = string.Empty;
-            var buffer = new byte[BUFFERSIZE];
+          //  var buffer = new byte[BUFFERSIZE];
             await _stream.WriteAsync(requestData, 0, requestData.Length);
 
-            using (MemoryStream ms = new MemoryStream())
-            {
-                int read;
-                while ((read = await _stream.ReadAsync(buffer, 0, buffer.Length)) > 0)
-                {
-                    ms.Write(buffer, 0, read);
-                    if (read < BUFFERSIZE) break;
-                }
-                response = System.Text.Encoding.ASCII.GetString(ms.ToArray());
-            }
 
-            return response;
+
+            if (_stream.CanRead)
+            {
+                var myReadBuffer = new byte[0];
+
+                var myCompleteMessage = new StringBuilder();
+                var numberOfBytesRead = 0;
+                var bufsize = 1024;
+                // Incoming message may be larger than the buffer size.
+                var readed = 0;
+                do
+                {
+                    Array.Resize(ref myReadBuffer, myReadBuffer.Length + bufsize);
+                    numberOfBytesRead = _stream.Read(myReadBuffer, readed, bufsize);
+                    readed += numberOfBytesRead;
+                    System.Threading.Thread.Sleep(500);
+                }
+                while (_tcpStream.DataAvailable);
+                using (var ms = new MemoryStream(myReadBuffer))
+                {
+                    return Encoding.ASCII.GetString(ms.ToArray());
+                }
+
+            }
+   
+            return string.Empty;
         }
 
         private static bool CertificateValidationCallback(object sender, X509Certificate certificate,

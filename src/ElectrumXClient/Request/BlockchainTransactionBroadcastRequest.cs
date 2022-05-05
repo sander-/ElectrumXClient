@@ -8,7 +8,7 @@ namespace ElectrumXClient.Request
     {
         public BlockchainTransactionBroadcastRequest() : base()
         {
-            base.Method = "blockchain.transaction.broadcast";            
+            Method = "blockchain.transaction.broadcast";            
         }
     }
 }

@@ -8,7 +8,7 @@ namespace ElectrumXClient.Request
     {
         public BlockchainTransactionGetRequest() : base()
         {
-            base.Method = "blockchain.transaction.get";            
+            Method = "blockchain.transaction.get";            
         }
     }
 }

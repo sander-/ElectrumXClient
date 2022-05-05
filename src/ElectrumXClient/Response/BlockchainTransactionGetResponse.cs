@@ -91,6 +91,9 @@ namespace ElectrumXClient.Response
 
                 [JsonProperty("addresses")]
                 public List<string> Addresses { get; set; }
+
+                [JsonProperty("address")]
+                public string Address { get; set; }
             }
         }
     }

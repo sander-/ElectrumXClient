@@ -8,8 +8,8 @@ namespace ElectrumXClient.Request
     {
         public ServerVersionRequest() : base()
         {
-            base.Method = "server.version";
-            base.Parameters = new string[0];
+            Method = "server.version";
+            Parameters = new string[0];
         }
     }
 }

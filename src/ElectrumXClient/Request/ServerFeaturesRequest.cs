@@ -8,8 +8,8 @@ namespace ElectrumXClient.Request
     {
         public ServerFeaturesRequest() : base()
         {
-            base.Method = "server.features";
-            base.Parameters = new object[0];
+            Method = "server.features";
+            Parameters = new object[0];
         }
     }
 }

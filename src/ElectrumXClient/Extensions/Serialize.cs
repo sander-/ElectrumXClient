@@ -7,11 +7,11 @@ namespace ElectrumXClient.Extensions
 {
     public static class SerializeResponse
     {
-        public static string ToJson<T>(this T self) => JsonConvert.SerializeObject(self, ElectrumXClient.Response.Converter<T>.Settings);
+        public static string ToJson<T>(this T self) => JsonConvert.SerializeObject(self, Response.Converter<T>.Settings);
     }
 
     public static class SerializeRequest
     {
-        public static string ToJson<T>(this T self) => JsonConvert.SerializeObject(self, ElectrumXClient.Request.Converter<T>.Settings);
+        public static string ToJson<T>(this T self) => JsonConvert.SerializeObject(self, Request.Converter<T>.Settings);
     }
 }

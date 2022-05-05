@@ -8,8 +8,8 @@ namespace ElectrumXClient.Request
     {
         public BlockchainScripthashGetBalanceRequest() : base()
         {
-            base.Method = "blockchain.scripthash.get_balance";
-            base.Parameters = null;
+            Method = "blockchain.scripthash.get_balance";
+            Parameters = null;
         }
     }
 }
