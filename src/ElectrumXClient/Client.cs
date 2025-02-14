@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ElectrumXClient
 {
-    public class Client : IDisposable, IClient
+    public class Client :  IClient
     {
         private string _host;
         private int _port;

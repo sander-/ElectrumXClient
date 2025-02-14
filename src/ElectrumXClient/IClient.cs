@@ -1,12 +1,12 @@
 ﻿using ElectrumXClient.Response;
+using System;
 using System.Threading.Tasks;
 
 namespace ElectrumXClient
 {
-    public interface IClient
+    public interface IClient : IDisposable
     {
         Task<BlockchainTransactionBroadcastResponse> BlockchainTransactionBroadcast(string tx);
-        void Dispose();
         Task<BlockchainBlockHeaderResponse> GetBlockchainBlockHeader();
         Task<BlockchainEstimatefeeResponse> GetBlockchainEstimatefee(uint number);
         Task<BlockchainScripthashListunspentResponse> GetBlockchainListunspent(string scripthash);
